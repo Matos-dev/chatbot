@@ -1,0 +1,20 @@
+<%= render(partial: 'headers/header_chatbot') %>
+
+<% if @clients.any? %>
+  <div class="autoscroll">
+      <h2>Clientes</h2>
+
+      <% @clients.each do |client| %>
+        <%=  client.name %> -
+        <%=  client.email %> -
+        <%=  client.rut %>
+        <br>
+      <% end %>
+      --------------------------------------------
+      <%= paginate @clients %>
+
+  </div>
+<% else %>
+  <p class="nodata">No hay datos</p>
+<% end %>
+

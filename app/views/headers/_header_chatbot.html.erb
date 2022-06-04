@@ -1,0 +1,36 @@
+<div class="tabs">
+  <ul>
+      <li>
+        <%= link_to "Listado de Clientes",
+                    {controller: :chatbot_intents, action: 'index'},
+                    class: 'selected'
+        %>
+      </li>
+      <li>
+        <%= link_to "Consulta de Depósito",
+                    {controller:  :chatbot_intents, action: 'consult_deposit'}
+        %>
+      </li>
+      <li>
+        <%= link_to "Consultar Indicadores",
+                    {controller:  :chatbot_intents, action: 'consult_indicators'}
+        %>
+      </li>
+      <li>
+        <%= link_to "Solicitar Rollos de papel",
+                    {controller:  :chatbot_intents, action: 'request_paper_rolls'}
+        %>
+      </li>
+
+
+  </ul>
+
+  <div class="tabs-buttons" style="display:none;">
+    <button class="tab-left" onclick="moveTabLeft(this);"></button>
+    <button class="tab-right" onclick="moveTabRight(this);"></button>
+  </div>
+  <script>
+      $(document).ready(displayTabsButtons);
+      $(window).resize(displayTabsButtons);
+  </script>
+</div>

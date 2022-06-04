@@ -1,0 +1,17 @@
+<%= render(partial: 'headers/header_chatbot') %>
+
+<% if @deposit.present? %>
+  <div class="autoscroll">
+    <h2>Información del depósito</h2>
+      Cliente: <%= @deposit.client.name %>
+      <br>
+      Rut del Cliente: <%= @deposit.client.rut %>
+      <br>
+      Fecha de abono: <%= @deposit.deposit_date %>
+      <br>
+      Monto: <%= @deposit.amount %>
+  </div>
+<% else %>
+  <p class="nodata">No hay datos</p>
+<% end %>
+
