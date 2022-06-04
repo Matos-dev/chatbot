@@ -2,7 +2,7 @@
 # Database definition
 development:
   adapter: postgresql
-  database: chatbot
+  database: chatbot_db
   host: localhost
   username: postgres
   password: postgres

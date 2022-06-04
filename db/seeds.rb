@@ -3,5 +3,16 @@
 #
 # Examples:
 #
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+require 'date'
+today = Date.today.to_date
+
+1.upto(10) do |i|
+  Client.create! name: Faker::FunnyName.name, rut: Faker::ChileRut.full_rut, email: Faker::Internet.email
+end
+
+Client.all.each do |client|
+  today.upto(today + 30.days) do |date|
+    Deposit.create! amount: Faker::Base.rand_in_range(0, 100000).round(2), deposit_date: date, client: client
+  end
+end
+
