@@ -6,7 +6,7 @@
 require 'date'
 today = Date.today.to_date
 
-1.upto(10) do |i|
+1.upto(10) do
   Client.create! name: Faker::FunnyName.name, rut: Faker::ChileRut.full_rut, email: Faker::Internet.email
 end
 

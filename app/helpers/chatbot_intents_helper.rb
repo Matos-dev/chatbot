@@ -1,0 +1,2 @@
+module ChatbotIntentsHelper
+end
