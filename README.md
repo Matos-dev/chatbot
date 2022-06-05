@@ -3,7 +3,17 @@
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
-Things you may want to cover:
+Instructions:
+
+require ruby version >= 3.0.2
+require postgresql version >= 10 
+
+Download the project and following these steps:
+
+Go into the root project directory and:
+
+* bundle install \
+(Note: Include gem wkhtmltopdf-binary for PDF creation, it may take a while)
 
 * rails db:create
 
@@ -11,4 +21,6 @@ Things you may want to cover:
 
 * rails db:seed
 
-* Configuration
+* rails s
+
+* Go to http://localhost:3000/

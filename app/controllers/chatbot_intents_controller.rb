@@ -14,6 +14,11 @@ class ChatbotIntentsController < ApplicationController
   end
 
   def deposit_details
+    unless params[:deposit_date].present?
+      redirect_to action: 'consult_deposit'
+      flash[:notice] = 'Debe introducir Rut y Fecha'
+      return
+    end
     if @client.present?
       @deposit = @client.deposits.where('deposit_date = ?', params[:deposit_date]).first
       unless @deposit.present?
@@ -72,14 +77,13 @@ class ChatbotIntentsController < ApplicationController
         html = render_to_string(template: 'chatbot_intents/order_details.pdf.erb',
                                 layout: false,
                                 encoding: 'utf8',
-                                locals: { order: @order })
+                                locals: {order: @order})
         pdf = WickedPdf.new.pdf_from_string(html, orientation: 'Landscape')
         send_data(pdf, filename: "order_#{@order.id}.pdf", disposition: 'inline',
-                  margin: { left: 200, right: 0 })
+                  margin: {left: 200, right: 0})
       end
     end
   end
-
 
   private
 

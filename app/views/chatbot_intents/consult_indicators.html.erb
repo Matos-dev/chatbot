@@ -1,6 +1,29 @@
 <%= render(partial: 'headers/header_chatbot') %>
 
 <div class="box">
-    <p><strong>Indicadores</strong></p>
-        <%= @indicators %>
+  <p><strong>Indicadores (https://mindicador.cl/api)</strong></p>
+  <div class="container-body">
+    <table class="list">
+      <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Code</th>
+        <th>Fecha</th>
+        <th>Monto</th>
+        <th>Unidad de Medida</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @indicators.each do |key, value| %>
+        <tr>
+          <td class="name"><span><%= value['nombre'] %></span></td>
+          <td class="name"><span><%= value['codigo'] %></span></td>
+          <td class="name"><span><%= value['fecha'].to_date.strftime("%m/%d/%Y") %></span></td>
+          <td class="name"><span><%= value['valor'] %></span></td>
+          <td class="name"><span><%= value['unidad_medida'] %></span></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>

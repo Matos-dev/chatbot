@@ -3,13 +3,26 @@
 <% if @deposit.present? %>
   <div class="autoscroll">
     <h2>Información del depósito</h2>
-      Cliente: <%= @deposit.client.name %>
-      <br>
-      Rut del Cliente: <%= @deposit.client.rut %>
-      <br>
-      Fecha de abono: <%= @deposit.deposit_date %>
-      <br>
-      Monto: <%= @deposit.amount %>
+    <div class="container-body">
+      <table class="list">
+        <thead>
+        <tr>
+          <th>RUT</th>
+          <th>Cliente</th>
+          <th>Fecha de abono</th>
+          <th>Monto</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class="name"><span><%= @deposit.client.rut %></span></td>
+          <td class="name"><span><%= @deposit.client.name %></span></td>
+          <td class="name"><span><%= @deposit.deposit_date.strftime("%m/%d/%Y") %></span></td>
+          <td class="name"><span><%= @deposit.amount %></span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 <% else %>
   <p class="nodata">No hay datos</p>

@@ -1,15 +1,32 @@
 <%= render(partial: 'headers/header_chatbot') %>
+<%= stylesheet_link_tag 'chatbot_intents' %>
 
 <% if @order.present? %>
   <div class="autoscroll">
-    <h2>Información de la orden de compra</h2>
-      <%= @order.client.name %>
-      <%= @order.quantity %>
-      <%= @order.amount %>
-      <%= @order.delivery_address %>
+    <h3>Información de la orden de compra</h3>
+    <div class="container-body">
+      <table class="list">
+        <thead>
+        <tr>
+          <th>RUT</th>
+          <th>Cliente</th>
+          <th>Cantidad</th>
+          <th>Monto</th>
+          <th>Dirección de entrega</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class="name"><span><%= @order.client.rut %></span></td>
+          <td class="name"><span><%= @order.client.name %></span></td>
+          <td class="name"><span><%= @order.quantity %></span></td>
+          <td class="name"><span><%= @order.amount %></span></td>
+          <td class="name"><span><%= @order.delivery_address %></span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-  <%= link_to "Get PDF", chatbot_intents_order_details_path(id: @order.id, format: :pdf) %>
-<% else %>
-  <p class="nodata">No hay datos</p>
+  <%= link_to "Exportar PDF", chatbot_intents_order_details_path(id: @order.id, format: :pdf) %>
 <% end %>
 

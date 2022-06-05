@@ -1,12 +1,17 @@
+<%= render(partial: 'headers/header_chatbot') %>
 <%= form_tag(chatbot_intents_deposit_details_path, method: :get) do %>
   <div class="box">
-    <p><strong>Indique Rut y fecha</strong></p>
-        <%= label_tag "Rut" %>
-        <%= text_field_tag "rut" %>
-        <%= label_tag "fecha" %>
-        <%= date_field_tag "deposit_date" %>
-      </div>
+    <p><strong>Indique Rut y Fecha</strong></p>
+    <%= label_tag "Rut" %>
+    <br>
+    <%= text_field_tag "rut" %>
+    <br>
+    <%= label_tag "fecha" %>
+    <br>
+    <%= date_field_tag "deposit_date" %>
+  </div>
+  <br>
 
   <%= submit_tag "OK" %>
-  <%= link_to "Cancel", :controller => 'chatbot_intents', :action => 'index' %>
+  <%= link_to "Volver", :controller => 'chatbot_intents', :action => 'index' %>
 <% end %>

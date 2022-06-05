@@ -1,18 +1,30 @@
 <%= render(partial: 'headers/header_chatbot') %>
+<%= stylesheet_link_tag 'chatbot_intents' %>
 
 <% if @clients.any? %>
   <div class="autoscroll">
-      <h2>Clientes</h2>
-
-      <% @clients.each do |client| %>
-        <%=  client.name %> -
-        <%=  client.email %> -
-        <%=  client.rut %>
-        <br>
-      <% end %>
-      --------------------------------------------
-      <%= paginate @clients %>
-
+    <h2>Clientes</h2>
+    <div class="container-body">
+      <table class="list">
+        <thead>
+        <tr>
+          <th>RUT</th>
+          <th>Nombre</th>
+          <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @clients.each do |client| %>
+          <tr>
+            <td class="name"><span><%= client.rut %></span></td>
+            <td class="name"><span><%= client.name %></span></td>
+            <td class="name"><span><%= client.email %></span></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+    <%= paginate @clients %>
   </div>
 <% else %>
   <p class="nodata">No hay datos</p>
