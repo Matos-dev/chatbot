@@ -12,7 +12,8 @@ end
 
 Client.all.each do |client|
   today.upto(today + 30.days) do |date|
-    Deposit.create! amount: Faker::Base.rand_in_range(0, 100000).round(2), deposit_date: date, client: client
+    deposit = client.deposits.find_by(deposit_date: date)
+    Deposit.create! amount: Faker::Base.rand_in_range(0, 10000).round(2), deposit_date: date, client: client unless deposit.present?
   end
 end
 
