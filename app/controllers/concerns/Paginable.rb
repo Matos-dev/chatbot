@@ -6,6 +6,6 @@ module Paginable
   end
 
   def per_page
-    (params[:per_page] || 20).to_i
+    (params[:per_page] || 10).to_i
   end
 end

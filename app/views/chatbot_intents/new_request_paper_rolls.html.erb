@@ -1,0 +1,14 @@
+<%= form_tag(chatbot_intents_request_paper_rolls_path, method: :post) do %>
+  <div class="box">
+    <p><strong>Indique Rut del cliente y cantidad de rollos de papel del pedido</strong></p>
+        <%= label_tag "Rut" %>
+        <%= text_field_tag "rut" %>
+        <%= label_tag "Cantidad" %>
+        <%= text_field_tag "quantity" %>
+        <%= label_tag "Dirección de entrega" %>
+        <%= text_area_tag "delivery_address" %>
+      </div>
+
+  <%= submit_tag "Solicitar" %>
+  <%= link_to "Cancel", :controller => 'chatbot_intents', :action => 'index' %>
+<% end %>

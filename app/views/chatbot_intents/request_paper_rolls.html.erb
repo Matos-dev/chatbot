@@ -1,0 +1,15 @@
+<%= render(partial: 'headers/header_chatbot') %>
+
+<% if @order.present? %>
+  <div class="autoscroll">
+    <h2>Información de la orden de compra</h2>
+      <%= @order.client.name %>
+      <%= @order.quantity %>
+      <%= @order.amount %>
+      <%= @order.delivery_address %>
+  </div>
+
+<% else %>
+  <p class="nodata">No hay datos</p>
+<% end %>
+

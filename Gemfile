@@ -58,3 +58,5 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem "faker", "~> 2.21"
 
 gem "kaminari", "~> 1.2"
+
+gem "wicked_pdf", "~> 2.6"
