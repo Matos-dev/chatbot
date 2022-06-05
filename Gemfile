@@ -5,8 +5,6 @@ ruby '3.0.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.0.5'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 1.4'
 # Use postgresql gem
 gem 'pg', '~> 1.3.5'
 # Use Puma as the app server
@@ -60,3 +58,5 @@ gem "faker", "~> 2.21"
 gem "kaminari", "~> 1.2"
 
 gem "wicked_pdf", "~> 2.6"
+
+gem "wkhtmltopdf-binary", "~> 0.12.6"

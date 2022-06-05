@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   get 'chatbot_intents/deposit_details', to: 'chatbot_intents#deposit_details'
   get 'chatbot_intents/new_request_paper_rolls', to: 'chatbot_intents#new_request_paper_rolls'
   post 'chatbot_intents/request_paper_rolls', to: 'chatbot_intents#request_paper_rolls'
+  get 'chatbot_intents/order_details', to: 'chatbot_intents#order_details'
 end

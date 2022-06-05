@@ -8,7 +8,7 @@
       <%= @order.amount %>
       <%= @order.delivery_address %>
   </div>
-
+  <%= link_to "Get PDF", chatbot_intents_order_details_path(id: @order.id, format: :pdf) %>
 <% else %>
   <p class="nodata">No hay datos</p>
 <% end %>
