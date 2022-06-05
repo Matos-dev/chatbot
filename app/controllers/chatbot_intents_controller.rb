@@ -1,6 +1,6 @@
 class ChatbotIntentsController < ApplicationController
   include Paginable
-  before_action :find_client, only: %i[deposit_details request_paper_rolls request_paper_rolls]
+  before_action :find_client, only: %i[deposit_details request_paper_rolls]
   before_action :find_order, only: %i[order_details]
 
   PAPER_ROLL_PRICE = 700
@@ -11,15 +11,18 @@ class ChatbotIntentsController < ApplicationController
 
   def index
     @clients = Client.all.page(current_page).per(per_page)
-  rescue ActiveRecord::RecordNotFound
-    render_404
   end
 
   def deposit_details
     if @client.present?
       @deposit = @client.deposits.where('deposit_date = ?', params[:deposit_date]).first
+      unless @deposit.present?
+        redirect_to action: 'consult_deposit'
+        flash[:notice] = 'No existe registro de depósito en la fecha solicitada'
+      end
     else
-      puts('No encontrado')
+      redirect_to action: 'consult_deposit'
+      flash[:notice] = 'Código RUT incorrecto'
     end
   end
 
@@ -37,26 +40,28 @@ class ChatbotIntentsController < ApplicationController
   end
 
   def request_paper_rolls
-    # deposit of tomorrow
-    tomorrow = Date.tomorrow
-    quantity = params['quantity'].to_i
-    delivery_address = params['delivery_address']
-    deposit = @client.deposits.where('deposit_date = ?', tomorrow).first
-    if deposit.present?
-      order_amount = quantity * PAPER_ROLL_PRICE
-      if order_amount <= deposit.amount
-        @order = OrderPaper.create! quantity: quantity, amount: order_amount,
-                                    delivery_address: delivery_address, client: @client
-        deposit.amount = deposit.amount - order_amount
-        deposit.save
-      else
-        redirect_to new_request_paper_rolls
-        flash[:notice] = 'Monto insuficiente para realizar el pedido'
+    if @client.present?
+      # deposit of tomorrow
+      tomorrow = Date.tomorrow
+      quantity = params['quantity'].to_i
+      delivery_address = params['delivery_address']
+      deposit = @client.deposits.where('deposit_date = ?', tomorrow).first
+      if deposit.present?
+        order_amount = quantity * PAPER_ROLL_PRICE
+        if order_amount <= deposit.amount
+          @order = OrderPaper.create! quantity: quantity, amount: order_amount,
+                                      delivery_address: delivery_address, client: @client
+          deposit.amount = deposit.amount - order_amount
+          deposit.save
+          redirect_to action: 'order_details', id: @order.id
+        else
+          redirect_to action: 'new_request_paper_rolls'
+          flash[:notice] = 'Monto insuficiente para realizar el pedido'
+        end
       end
-      redirect_to action: 'order_details', id: @order.id
     else
-      redirect_to index
-      flash[:notice] = 'No existe deposito en la fecha escogida'
+      redirect_to action: 'new_request_paper_rolls'
+      flash[:notice] = 'Código RUT incorrecto'
     end
   end
 
@@ -80,14 +85,11 @@ class ChatbotIntentsController < ApplicationController
 
   def find_client
     @client = Client.find_by(rut: params[:rut])
-  rescue ActiveRecord::RecordNotFound
-    render_404
   end
 
   def find_order
     @order = OrderPaper.find(params[:id])
-    puts(params)
   rescue ActiveRecord::RecordNotFound
-    render_404
+    flash[:error] = 'Orden no encontrada'
   end
 end
