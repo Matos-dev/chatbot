@@ -29,9 +29,11 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 
-en:
-  no_deposit: "No deposit on date"
-  invalid_rut: "incorrect RUT"
-  rut_date_validate: "Require Rut and Date"
-  insufficient_amount: "insufficient amount"
-  no_order: "order not found"
+es:
+  no_deposit: "No existe registro de depósito en la fecha solicitada"
+  invalid_rut: "Código RUT incorrecto"
+  rut_date_validate: "Debe introducir Rut y Fecha"
+  insufficient_amount: "Monto insuficiente para realizar el pedido"
+  no_order: "Orden no encontrada"
+
+

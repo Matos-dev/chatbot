@@ -16,16 +16,14 @@ class ChatbotIntentsController < ApplicationController
 
   def deposit_details
     unless params[:deposit_date].present?
-      response_with_notice('consult_deposit', 'Debe introducir Rut y Fecha')
+      response_with_notice('consult_deposit', t(:rut_date_validate))
       return
     end
     if @client.present?
       @deposit = @client.deposits.find_by(deposit_date: params[:deposit_date])
-      unless @deposit.present?
-        response_with_notice('consult_deposit', 'No existe registro de depósito en la fecha solicitada')
-      end
+      response_with_notice('consult_deposit', t(:no_deposit)) unless @deposit.present?
     else
-      response_with_notice('consult_deposit', 'Código RUT incorrecto')
+      response_with_notice('consult_deposit', t(:invalid_rut))
     end
   end
 
@@ -44,11 +42,11 @@ class ChatbotIntentsController < ApplicationController
           create_order(delivery_address, deposit, order_amount, quantity)
           redirect_to action: 'order_details', id: @order.id
         else
-          response_with_notice('new_request_paper_rolls', 'Monto insuficiente para realizar el pedido')
+          response_with_notice('new_request_paper_rolls', t(:insufficient_amount))
         end
       end
     else
-      response_with_notice('new_request_paper_rolls', 'Código RUT incorrecto')
+      response_with_notice('new_request_paper_rolls', t(:invalid_rut))
     end
   end
 
@@ -73,7 +71,7 @@ class ChatbotIntentsController < ApplicationController
   def find_order
     @order = OrderPaper.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    flash[:error] = 'Orden no encontrada'
+    flash[:error] = t(:no_order)
   end
 
   def create_order(delivery_address, deposit, order_amount, quantity)
