@@ -1,5 +1,6 @@
 class ChatbotIntentsController < ApplicationController
   include Paginable
+  include Indicators
   before_action :find_client, only: %i[deposit_details request_paper_rolls]
   before_action :find_order, only: %i[order_details]
 
@@ -15,58 +16,39 @@ class ChatbotIntentsController < ApplicationController
 
   def deposit_details
     unless params[:deposit_date].present?
-      redirect_to action: 'consult_deposit'
-      flash[:notice] = 'Debe introducir Rut y Fecha'
+      response_with_notice('consult_deposit', 'Debe introducir Rut y Fecha')
       return
     end
     if @client.present?
-      @deposit = @client.deposits.where('deposit_date = ?', params[:deposit_date]).first
+      @deposit = @client.deposits.find_by(deposit_date: params[:deposit_date])
       unless @deposit.present?
-        redirect_to action: 'consult_deposit'
-        flash[:notice] = 'No existe registro de depósito en la fecha solicitada'
+        response_with_notice('consult_deposit', 'No existe registro de depósito en la fecha solicitada')
       end
     else
-      redirect_to action: 'consult_deposit'
-      flash[:notice] = 'Código RUT incorrecto'
+      response_with_notice('consult_deposit', 'Código RUT incorrecto')
     end
   end
 
   def consult_indicators
-    # Indicators from https://mindicador.cl/api
-    require 'net/http'
-    require 'json'
-    @indicators = {}
-    uri = URI('https://mindicador.cl/api')
-    res = Net::HTTP.get_response(uri)
-    data = JSON.parse(res.body)
-    @indicators['dolar'] = data['dolar']
-    @indicators['utm'] = data['utm']
-    @indicators['uf'] = data['uf']
+    search_indicators
   end
 
   def request_paper_rolls
     if @client.present?
-      # deposit of tomorrow
-      tomorrow = Date.tomorrow
       quantity = params['quantity'].to_i
       delivery_address = params['delivery_address']
-      deposit = @client.deposits.where('deposit_date = ?', tomorrow).first
+      deposit = @client.deposits.find_by(deposit_date: Date.tomorrow) # deposit of tomorrow
       if deposit.present?
         order_amount = quantity * PAPER_ROLL_PRICE
         if order_amount <= deposit.amount
-          @order = OrderPaper.create! quantity: quantity, amount: order_amount,
-                                      delivery_address: delivery_address, client: @client
-          deposit.amount = deposit.amount - order_amount
-          deposit.save
+          create_order(delivery_address, deposit, order_amount, quantity)
           redirect_to action: 'order_details', id: @order.id
         else
-          redirect_to action: 'new_request_paper_rolls'
-          flash[:notice] = 'Monto insuficiente para realizar el pedido'
+          response_with_notice('new_request_paper_rolls', 'Monto insuficiente para realizar el pedido')
         end
       end
     else
-      redirect_to action: 'new_request_paper_rolls'
-      flash[:notice] = 'Código RUT incorrecto'
+      response_with_notice('new_request_paper_rolls', 'Código RUT incorrecto')
     end
   end
 
@@ -74,13 +56,10 @@ class ChatbotIntentsController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
-        html = render_to_string(template: 'chatbot_intents/order_details.pdf.erb',
-                                layout: false,
-                                encoding: 'utf8',
-                                locals: {order: @order})
+        html = render_to_string(template: 'chatbot_intents/order_details.pdf.erb', layout: false, encoding: 'utf8',
+                                locals: { order: @order })
         pdf = WickedPdf.new.pdf_from_string(html, orientation: 'Landscape')
-        send_data(pdf, filename: "order_#{@order.id}.pdf", disposition: 'inline',
-                  margin: {left: 200, right: 0})
+        send_data(pdf, filename: "order_#{@order.id}.pdf", disposition: 'inline', margin: { left: 200, right: 0 })
       end
     end
   end
@@ -95,5 +74,17 @@ class ChatbotIntentsController < ApplicationController
     @order = OrderPaper.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     flash[:error] = 'Orden no encontrada'
+  end
+
+  def create_order(delivery_address, deposit, order_amount, quantity)
+    @order = OrderPaper.create! quantity: quantity, amount: order_amount,
+                                delivery_address: delivery_address, client: @client
+    deposit.amount = deposit.amount - order_amount
+    deposit.save
+  end
+
+  def response_with_notice(action, message)
+    redirect_to action: action
+    flash[:notice] = message
   end
 end
